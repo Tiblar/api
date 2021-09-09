@@ -1,0 +1,29 @@
+# Read the documentation: https://symfony.com/doc/master/bundles/FOSRestBundle/index.html
+fos_rest:
+  #    param_fetcher_listener:  true
+  #    allowed_methods_listener:  true
+  #    routing_loader: true
+  #    view:
+  #        view_response_listener:  true
+  #    exception:
+  #        codes:
+  #            App\Exception\MyException: 403
+  #        messages:
+  #            App\Exception\MyException: Forbidden area.
+  #    format_listener:
+  #        rules:
+  #            - { path: ^/api, prefer_extension: true, fallback_format: json, priorities: [ json, html ] }
+  format_listener:
+    enabled: true
+    rules:
+      - { path: '^/api/v2/market/purchase/qr', priorities: [ 'html', '*/*'], fallback_format: ~, prefer_extension: true }
+      - { path: '^/api/v2/oauth', priorities: [ 'html', '*/*' ], fallback_format: ~, prefer_extension: true }
+      - { path: '^/api/v2', priorities: ['json', 'xml'], fallback_format: json, prefer_extension: false }
+      - { path: '^/api/staff', priorities: ['json', 'xml'], fallback_format: json, prefer_extension: false }
+      - { path: '^/', priorities: [ 'html', '*/*'], fallback_format: ~, prefer_extension: true }
+  view:
+    jsonp_handler: ~
+  disable_csrf_role: ROLE_API
+  body_listener:
+    decoders:
+      json: fos_rest.decoder.json

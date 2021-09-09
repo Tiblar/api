@@ -1,0 +1,30 @@
+doctrine:
+    dbal:
+        default_connection: default
+        connections:
+            default:
+                url: '%env(resolve:DATABASE_URL)%'
+                driver: 'pdo_mysql'
+                charset: utf8mb4
+    orm:
+        auto_generate_proxy_classes: true
+        default_entity_manager: default
+        entity_managers:
+            default:
+                naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+                auto_mapping: true
+                connection: default
+                dql:
+                    numeric_functions:
+                        rand: App\DQL\Rand
+                        floor: App\DQL\Floor
+                        unix_timestamp: App\DQL\UnixTimestamp
+                        from_unixtime: App\DQL\FromUnixtime
+                        extension: App\DQL\Extension
+                mappings:
+                    App:
+                        is_bundle: false
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/Entity'
+                        prefix: 'App\Entity'
+                        alias: App

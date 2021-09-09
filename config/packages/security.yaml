@@ -1,0 +1,100 @@
+security:
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        webservice:
+            id: App\Security\User\FormerlyChucksUserProvider
+        staff:
+            entity:
+                class: App\Entity\Staff\User
+                property: username
+    firewalls:
+        refresh:
+            pattern: ^/api/v2/auth/token/refresh
+            provider: webservice
+            stateless: true
+            anonymous: true
+        login:
+            pattern: ^/api/v2/auth/login
+            provider: webservice
+            stateless: true
+            anonymous: true
+            json_login:
+                check_path: /api/v2/auth/login
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+        logout:
+            pattern: ^/api/v2/auth/logout
+            provider: webservice
+            anonymous: true
+            logout:
+                path:   app_logout
+                delete_cookies: ['AUTH_TOKEN']
+        oauth:
+            pattern: ^/api/v2/oauth/identity
+            anonymous: true
+            stateless: true
+        api:
+            pattern: ^/api/v2
+            provider: webservice
+            anonymous: true
+            stateless: true
+            guard:
+                authenticators:
+                    - App\Security\Guard\TokenAuthenticator
+        staff:
+            pattern: ^/api/staff
+            provider: staff
+            stateless: true
+            http_basic: ~
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            anonymous: true
+    encoders:
+        App\Entity\User\User:
+            algorithm:  'bcrypt'
+            cost: 13
+        App\Entity\Staff\User:
+            algorithm:  'bcrypt'
+            cost: 13
+    access_control:
+        - { path: ^/api/v2/auth, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/v2/oauth, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+
+        - { path: ^/api/v2/auth/confirm-email/resend, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/v2/auth/confirm-email, roles: IS_AUTHENTICATED_FULLY }
+        - { path: "^/api/v2/auth/confirm-email/([a-zA-Z0-9_-]){8}", roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/v2/auth/change-password, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/v2/auth/account, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/v2/oauth/auth, roles: IS_AUTHENTICATED_FULLY }
+
+        - { path: "^/api/v2/auth/two-factor/email/([a-zA-Z0-9_-]){8}", roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: "^/api/v2/auth/two-factor/login/([a-zA-Z0-9_-]){8}", roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/v2/auth/two-factor, roles: IS_AUTHENTICATED_FULLY }
+
+        - { path: ^/api/v2/market/webhook, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/v2/market/ipn, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: "^/api/v2/market/product/([0-9]){15,22}", roles: IS_AUTHENTICATED_ANONYMOUSLY }
+
+        - { path: ^/api/v2/search, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/v2/ping, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/v2/captcha, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/v2/instance, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/v2/users/profile, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/v2/users/@me, roles: IS_AUTHENTICATED_FULLY }
+
+        - { path: "^/api/v2/post/([0-9]){15,22}", methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/v2/post/feed, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/v2/post/replies, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: "^/api/v2/post/waveform/([a-zA-Z0-9_-]){40}", roles: IS_AUTHENTICATED_ANONYMOUSLY }
+
+        - { path: "^/api/v2/list/([0-9]){15,22}", roles: IS_AUTHENTICATED_ANONYMOUSLY }
+
+        - { path: ^/api/v2/social/recommend, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+
+        - { path: ^/api/v2/video/history, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/v2/video, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+
+        - { path: ^/api/v2, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/staff, roles: IS_AUTHENTICATED_FULLY }

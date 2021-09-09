@@ -1,0 +1,21 @@
+api:
+  resource: ../src/Controller/Actions
+  type: annotation
+  prefix: /api/v2
+
+mod:
+  resource: ../src/Controller/Staff
+  type: annotation
+  prefix: /api/staff
+
+api_login_check:
+  path: /api/v2/auth/login
+  methods: [post]
+
+app_logout:
+  path: /api/v2/auth/logout
+  methods: [post]
+
+api_jwt_refresh_token:
+  path:       /api/v2/auth/token/refresh
+  controller: App\Controller\Actions\Auth\RefreshTokenController::refreshToken

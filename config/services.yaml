@@ -1,0 +1,288 @@
+parameters:
+    jwt_ttl: '%env(JWT_TTL)%'
+    max_username_length: 16
+    reserved_usernames:
+        - 'false'
+        - 'null'
+        - 'true'
+        - assets
+        - activity
+        - admin
+        - analytics
+        - api
+        - captcha
+        - changelog
+        - stream
+        - channel
+        - connect
+        - contact
+        - chat
+        - list
+        - lists
+        - video
+        - css
+        - dashboard
+        - donate
+        - fonts
+        - forgot
+        - help
+        - icons
+        - invite
+        - ivt
+        - js
+        - login
+        - logout
+        - post
+        - register
+        - reset
+        - request
+        - requester
+        - requested
+        - rules
+        - search
+        - settings
+        - marketplace
+        - matrix
+        - support
+        - support
+        - tag
+        - tfa
+        - trending
+        - verify
+        - verify
+        - wave
+        - unsealed
+        - auth
+        - watch
+    cookie_secure: false
+    file_types:
+        image:
+            - "png"
+            - "jpg"
+            - "jpeg"
+            - "gif"
+            - "webp"
+        video:
+            - "mp4"
+            - "webm"
+            - "mov"
+        audio:
+            - "mp3"
+            - "ogg"
+            - "flac"
+        pdf:
+            - "pdf"
+        file:
+            - "zip"
+            - "gz"
+    # Max file sizes in mb
+    file_sizes:
+        image: 8
+        video: 100
+        audio: 100
+        pdf: 100
+        file: 100
+    file_sizes_boost:
+        image: 8
+        video: 10000
+        audio: 1000
+        pdf: 10000
+        file: 10000
+    backblaze:
+        bucket: '%env(BACKBLAZE_BUCKET)%'
+        domain: '%env(BACKBLAZE_DOMAIN)%'
+        accountId: '%env(BACKBLAZE_ACCOUNTID)%'
+        keyId: '%env(BACKBLAZE_KEYID)%'
+        key: '%env(BACKBLAZE_KEY)%'
+        dev: '%env(BACKBLAZE_DEV)%'
+    max_tags: 20
+    max_tag_length: 24
+    max_title_length: 70
+    max_body_length: 32000
+    clearnet_url: formerlychucks.net
+    # How often can resend email
+    resend_email_rate: 60
+    connection:
+        discord:
+            url: '%env(DISCORD_URL)%'
+            client: '%env(DISCORD_CLIENT)%'
+            secret: '%env(DISCORD_SECRET)%'
+            return: '%env(DISCORD_RETURN)%'
+    boost_product_id: '%env(BOOST_PRODUCT_ID)%'
+    boost_stripe_product_id: '%env(BOOST_STRIPE_PRODUCT_ID)%'
+    boost_stripe_pricing_base_id: '%env(BOOST_STRIPE_PRICING_BASE_ID)%'
+    boost_stripe_pricing_storage_id: '%env(BOOST_STRIPE_PRICING_STORAGE_ID)%'
+    storage_attribute_id: '%env(STORAGE_ATTRIBUTE_ID)%'
+    paypal:
+        client_id: '%env(PAYPAL_CLIENT_ID)%'
+        client_secret: '%env(PAYPAL_CLIENT_SECRET)%'
+        email: '%env(PAYPAL_EMAIL)%'
+        sandbox: '%env(PAYPAL_SANDBOX)%'
+    stripe:
+        secret_key: '%env(STRIPE_SECRET_KEY)%'
+        webhook_secret: '%env(STRIPE_WEBHOOK_SECRET)%'
+    coin_payments:
+        merchant_id: '%env(COIN_PAYMENTS_MERCHANT_ID)%'
+        public_key: '%env(COIN_PAYMENTS_PUBLIC_KEY)%'
+        private_key: '%env(COIN_PAYMENTS_PRIVATE_KEY)%'
+        ipn_url: '%env(COIN_PAYMENTS_IPN_URL)%'
+    matrix:
+        server: '%env(MATRIX_SERVER)%'
+        auth_redirect_url: '%env(MATRIX_AUTH_REDIRECT_URL)%'
+    legacy_boost_users:
+        - 751730099283302095
+        - 751730099656595226
+        - 751730103754430763
+        - 751730124323296372
+        - 751730142623047227
+        - 751730155155624892
+        - 751730158787892624
+        - 751730161929426728
+        - 751730161962981168
+        - 751730167000340977
+        - 751730180262731688
+        - 751730180858318888
+        - 751730190110954533
+        - 751730193202156981
+        - 751730193588033066
+        - 751730196209473347
+        - 751730197983664229
+        - 751730201326524979
+        - 751730203947965279
+        - 751730210155536096
+        - 751730232465037890
+        - 751730246658560454
+        - 751730252350231619
+        - 751730261703530854
+        - 751730264287222385
+    oauth2:
+        "formerly-chucks-client-id":
+            secret: "formerly-chucks-client-secret"
+            redirect_uri: "http://localhost/_synapse/client/oidc/callback"
+    akismet:
+        key: "%env(AKISMET_API_KEY)%"
+        dev: "%env(AKISMET_DEV_MODE)%"
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+            - '../src/Tests/'
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Controller\:
+        resource: '../src/Controller/'
+        tags: [ 'controller.service_arguments' ]
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+
+    app.event.jwt_created_listener:
+        class: App\Event\JWTCreatedListener
+        arguments: [ '@request_stack' ]
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onJWTCreated }
+
+    app.event.jwt_authentication_success_listener:
+        class: App\Event\JWTAuthenticationSuccessListener
+        arguments: ['%env(JWT_TTL)%', '%cookie_secure%', "@doctrine.orm.entity_manager"]
+        tags:
+            tag_1:
+                name: kernel.event_listener
+                event: lexik_jwt_authentication.on_authentication_success
+                method: onAuthenticationSuccess
+
+    app.event.jwt_notfound_listener:
+        class: App\Event\JWTNotFoundListener
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_not_found, method: onJWTNotFound }
+
+    app.event.authentication_failure_listener:
+        class: App\Event\AuthenticationFailureListener
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_failure, method: onAuthenticationFailureResponse }
+
+    App\Event\LoginListener:
+        arguments: [ "@doctrine.orm.entity_manager" ]
+        tags:
+            - { name: 'kernel.event_listener', event: 'security.interactive_login' }
+
+    formerly_chucks_user_provider:
+        class: App\Security\User\FormerlyChucksUserProvider
+        autowire: true
+        arguments:
+            - "@doctrine.orm.entity_manager"
+
+    App\Event\ExceptionListener:
+        arguments: ["%kernel.environment%"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
+
+    App\Service\BackBlaze\BackBlaze:
+        arguments:
+            $settings: '%backblaze%'
+
+    App\Service\Content\Resource:
+        arguments:
+            $fileTypes: '%file_types%'
+
+    App\Service\Post\Tags:
+        arguments:
+            $maxTags: '%max_tags%'
+            $maxTagLength: '%max_tag_length%'
+
+    App\Service\User\Emailer:
+        arguments:
+            $clearnetURL: '%clearnet_url%'
+            $resendRate: '%resend_email_rate%'
+
+    App\Service\Connection\Discord\DiscordConnect:
+        arguments:
+            $url: '%env(DISCORD_URL)%'
+            $client: '%env(DISCORD_CLIENT)%'
+            $secret: '%env(DISCORD_SECRET)%'
+            $return: '%env(DISCORD_RETURN)%'
+
+    App\Service\Billing\GetBilling:
+        arguments:
+            $paypal: '%env(PAYPAL_EMAIL)%'
+
+    App\Service\Billing\OrderManager:
+        arguments:
+            $boostProductId: '%env(BOOST_PRODUCT_ID)%'
+            $storageAttributeId: '%env(STORAGE_ATTRIBUTE_ID)%'
+
+    App\Service\Billing\Stripe:
+        arguments:
+            $secretKey: '%env(STRIPE_SECRET_KEY)%'
+            $webhookSecret: '%env(STRIPE_WEBHOOK_SECRET)%'
+
+    App\Service\Billing\CoinPayments:
+        arguments:
+            $publicKey: '%env(COIN_PAYMENTS_PUBLIC_KEY)%'
+            $privateKey: '%env(COIN_PAYMENTS_PRIVATE_KEY)%'
+            $merchantId: '%env(COIN_PAYMENTS_MERCHANT_ID)%'
+            $ipnURL: '%env(COIN_PAYMENTS_IPN_URL)%'
+            $ipnSecret: '%env(COIN_PAYMENTS_IPN_SECRET)%'
+
+    App\Service\Matrix\MatrixInterface:
+        arguments:
+            $matrixServer: '%env(MATRIX_SERVER)%'
+            $redirectURL: '%env(MATRIX_AUTH_REDIRECT_URL)%'
+            $environment: "%kernel.environment%"
+
+
+    App\Service\SpamFilter\SpamFilter:
+        arguments:
+            $spamKey: '%env(SPAM_KEY)%'
