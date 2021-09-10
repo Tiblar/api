@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\User;
 
+use App\Entity\Media\File;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,9 +37,10 @@ class UserInfo
     private $joinDate;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Media\File", fetch="EAGER")
+     * @ORM\JoinColumn(name="avatar_file_id", referencedColumnName="id")
      */
-    private $avatar;
+    private File $avatar;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -161,17 +163,17 @@ class UserInfo
     }
 
     /**
-     * @return string
+     * @return File
      */
-    public function getAvatar(): string
+    public function getAvatar(): File
     {
         return $this->avatar;
     }
 
     /**
-     * @param string $avatar
+     * @param File $avatar
      */
-    public function setAvatar(string $avatar): void
+    public function setAvatar(File $avatar): void
     {
         $this->avatar = $avatar;
     }

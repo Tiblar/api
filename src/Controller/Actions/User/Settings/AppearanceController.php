@@ -53,19 +53,19 @@ class AppearanceController extends ApiController
             $avatar->setHash($resource->getHash());
             $avatar->setHashName($resource->getHash() . ".png");
             $avatar->setExtension("png");
-            $avatar->setURL($resource->upload());
             $avatar->setHeight($resource->getHeight());
             $avatar->setWidth($resource->getWidth());
+            $resource->upload();
 
             $em->persist($avatar);
         }
 
-        $user->getInfo()->setAvatar($avatar->getURL());
+        $user->getInfo()->setAvatar($avatar);
 
         if(!$matrix->updateUser($user, [ 'avatar_contents' => $resource->getContents() ])){
             return $this->respondWithErrors([
                 'matrix' => 'Error updating Matrix account.'
-            ], null, 400);
+            ]);
         }
 
         $em->flush();

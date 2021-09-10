@@ -40,6 +40,11 @@ oidc_providers:
         display_name_template: "{{ data.user.info.username }}"
 ```
 
+Train spam filter:
+```
+php bin/console app:train-spam-filter --mode train
+```
+
 Cron
 ```
 0 */24 * * * php /var/www/tiblar-api/bin/console app:calculate-storage
@@ -49,5 +54,7 @@ Cron
 
 Generate JWT keys:
 ```
-php bin/console lexik:jwt:generate-keypair
+mkdir -p config/jwt
+openssl genpkey -out config/jwt/private.pem -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096
+openssl pkey -in config/jwt/private.pem -out config/jwt/public.pem -pubout
 ```

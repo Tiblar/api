@@ -94,15 +94,7 @@ class File
      */
     public function getURL(): string
     {
-        return $this->url;
-    }
-
-    /**
-     * @param string $url
-     */
-    public function setURL(string $url): void
-    {
-        $this->url = $url;
+        return '//' . $_ENV['S3_DOMAIN'] . '/' . $_ENV['S3_BUCKET'] . '/' . $this->getHashName();
     }
 
     /**

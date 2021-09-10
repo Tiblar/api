@@ -3,6 +3,8 @@ namespace App\Structure\User;
 
 use App\Entity\User\UserInfo;
 
+use App\Structure\Media\SanitizedFile;
+
 /**
  * User Info without sensitive information.
  */
@@ -29,7 +31,7 @@ class SanitizedUserInfo
     private $joinDate;
 
     /**
-     * @var string
+     * @var SanitizedFile
      */
     private $avatar;
 
@@ -106,7 +108,7 @@ class SanitizedUserInfo
         $this->username = $info->getUsername();
         $this->usernameColor = $info->getUsernameColor();
         $this->joinDate = $info->getJoinDate();
-        $this->avatar = $info->getAvatar();
+        $this->avatar = new SanitizedFile($info->getAvatar()->toArray());
         $this->banner = $info->getBanner();
         $this->locale = $info->getLocale();
         $this->nsfw = $info->isNsfw();
@@ -184,17 +186,17 @@ class SanitizedUserInfo
     }
 
     /**
-     * @return string
+     * @return SanitizedFile
      */
-    public function getAvatar(): string
+    public function getAvatar(): SanitizedFile
     {
         return $this->avatar;
     }
 
     /**
-     * @param string $avatar
+     * @param SanitizedFile $avatar
      */
-    public function setAvatar(string $avatar): void
+    public function setAvatar(SanitizedFile $avatar): void
     {
         $this->avatar = $avatar;
     }
@@ -415,7 +417,7 @@ class SanitizedUserInfo
             'username' => $this->getUsername(),
             'username_color' => $this->getUsernameColor(),
             'join_date' => $this->joinDate->format('c'),
-            'avatar' => $this->getAvatar(),
+            'avatar' => $this->getAvatar()->getURL(),
             'banner' => $this->getBanner(),
             'locale' => $this->getLocale(),
             'nsfw' => $this->isNsfw(),

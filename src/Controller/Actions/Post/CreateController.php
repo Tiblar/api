@@ -406,7 +406,6 @@ class CreateController extends ApiController
 
             if(!$file INSTANCEOF File){
                 $file = new File();
-                $file->setURL($resource->upload());
                 $file->setHash($resource->getHash());
                 $file->setHashName($resource->getHashName());
                 $file->setFileSize($resource->getFileSize());
@@ -416,6 +415,7 @@ class CreateController extends ApiController
                     $file->setWidth($resource->getWidth());
                     $file->setHeight($resource->getHeight());
                 }
+                $resource->upload();
 
                 $em->persist($file);
             }
@@ -761,7 +761,6 @@ class CreateController extends ApiController
 
         if(!($thumbFile instanceof File)){
             $thumbFile = new File();
-            $thumbFile->setURL($thumbResource->upload());
             $thumbFile->setHash($thumbResource->getHash());
             $thumbFile->setHashName($thumbResource->getHashName());
             $thumbFile->setFileSize($thumbResource->getFileSize());
@@ -771,6 +770,7 @@ class CreateController extends ApiController
                 $thumbFile->setWidth($thumbResource->getWidth());
                 $thumbFile->setHeight($thumbResource->getHeight());
             }
+            $thumbResource->upload();
 
             $em->persist($thumbFile);
         }
@@ -790,7 +790,6 @@ class CreateController extends ApiController
 
         if(!($thumbFile instanceof File)){
             $thumbFile = new File();
-            $thumbFile->setURL($thumbResource->upload());
             $thumbFile->setHash($thumbResource->getHash());
             $thumbFile->setHashName($thumbResource->getHashName());
             $thumbFile->setFileSize($thumbResource->getFileSize());
@@ -800,6 +799,7 @@ class CreateController extends ApiController
                 $thumbFile->setWidth($thumbResource->getWidth());
                 $thumbFile->setHeight($thumbResource->getHeight());
             }
+            $thumbResource->upload();
 
             $em->persist($thumbFile);
         }

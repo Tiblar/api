@@ -5,11 +5,11 @@ class SanitizedFile
 {
     private $id;
 
-    private $url;
-
     private $fileSize;
 
     private $hash;
+
+    private $hashName;
 
     private $height;
 
@@ -23,16 +23,24 @@ class SanitizedFile
             $this->setId($arr['id']);
         }
 
-        if(isset($arr['url'])){
-            $this->setURL($arr['url']);
-        }
-
         if(isset($arr['fileSize'])){
             $this->setFileSize($arr['fileSize']);
         }
 
+        if(isset($arr['file_size'])){
+            $this->setFileSize($arr['file_size']);
+        }
+
         if(isset($arr['hash'])){
             $this->setHash($arr['hash']);
+        }
+
+        if(isset($arr['hashName'])){
+            $this->setHashName($arr['hashName']);
+        }
+
+        if(isset($arr['hash_name'])){
+            $this->setHashName($arr['hash_name']);
         }
 
         if(isset($arr['height'])){
@@ -69,15 +77,7 @@ class SanitizedFile
      */
     public function getURL(): string
     {
-        return $this->url;
-    }
-
-    /**
-     * @param string $url
-     */
-    public function setURL(string $url): void
-    {
-        $this->url = $url;
+        return '//' . $_ENV['S3_DOMAIN'] . '/' . $_ENV['S3_BUCKET'] . '/' . $this->getHashName();
     }
 
     /**
@@ -110,6 +110,22 @@ class SanitizedFile
     public function setHash(string $hash): void
     {
         $this->hash = $hash;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHashName(): string
+    {
+        return $this->hashName;
+    }
+
+    /**
+     * @param string $hashName
+     */
+    public function setHashName(string $hashName): void
+    {
+        $this->hashName = $hashName;
     }
 
     /**

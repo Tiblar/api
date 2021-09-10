@@ -123,7 +123,7 @@ class DiscordConnect{
                     $file->setHashName($resource->getHash() . ".png");
                     $file->setHeight($resource->getHeight());
                     $file->setWidth($resource->getWidth());
-                    $file->setURL($resource->upload());
+                    $resource->upload();
 
                     $this->em->persist($file);
                 }

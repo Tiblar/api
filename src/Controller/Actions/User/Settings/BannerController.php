@@ -47,9 +47,9 @@ class BannerController extends ApiController
                 $banner->setHash($resource->getHash());
                 $banner->setHashName($resource->getHashName());
                 $banner->setExtension("png");
-                $banner->setURL($resource->upload());
                 $banner->setHeight($resource->getHeight());
                 $banner->setWidth($resource->getWidth());
+                $resource->upload();
 
                 $em->persist($banner);
             }

@@ -279,7 +279,6 @@ class LargeFileController extends ApiController
         $file = new File();
         $file->setHash($fileInit->getHash());
         $file->setExtension($fileInit->getExtension());
-        $file->setURL($url);
         $file->setFileSize($fileInit->getFileSize());
         $file->setHashName($fileInit->getHash() . '.' . $fileInit->getExtension());
 

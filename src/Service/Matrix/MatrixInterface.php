@@ -96,7 +96,7 @@ class MatrixInterface {
         $matrixServer = $this->matrixServer;
         $schema = $this->environment === 'dev' ? "http://" : "https://";
 
-        $updateUsername = $data['username'] === true;
+        $updateUsername = isset($data['username']) && $data['username'] === true;
         $avatarContents = isset($data['avatar_contents']) ? $data['avatar_contents'] : null;
         $mxcAvatar = isset($data['avatar_mxc']) ? $data['avatar_mxc'] : null;
 

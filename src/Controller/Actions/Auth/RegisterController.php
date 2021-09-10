@@ -89,9 +89,9 @@ class RegisterController extends ApiController
                 $avatar->setHash($resource->getHash());
                 $avatar->setHashName($resource->getHash() . ".png");
                 $avatar->setExtension("png");
-                $avatar->setURL($resource->upload());
                 $avatar->setHeight($resource->getHeight());
                 $avatar->setWidth($resource->getWidth());
+                $resource->upload();
 
                 $em->persist($avatar);
             }
@@ -119,7 +119,7 @@ class RegisterController extends ApiController
 
             // Set info settings
             $info->setId($user->getId());
-            $info->setAvatar($avatar->getURL());
+            $info->setAvatar($avatar);
             $info->setUsername($username);
             $em->persist($info);
 
