@@ -46,3 +46,8 @@ Cron
 0 * * * * php /var/www/tiblar-api/bin/console app:calculate-analytics
 0 * * * * php /var/www/tiblar-api/bin/console app:rate-spam-ips
 ```
+
+Generate JWT keys:
+```
+php bin/console lexik:jwt:generate-keypair
+```
