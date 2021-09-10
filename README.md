@@ -39,3 +39,10 @@ oidc_providers:
         localpart_template: "tb_{{ data.user.id}}"
         display_name_template: "{{ data.user.info.username }}"
 ```
+
+Cron
+```
+0 */24 * * * php /var/www/tiblar-api/bin/console app:calculate-storage
+0 * * * * php /var/www/tiblar-api/bin/console app:calculate-analytics
+0 * * * * php /var/www/tiblar-api/bin/console app:rate-spam-ips
+```
