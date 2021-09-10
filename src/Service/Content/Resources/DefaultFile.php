@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Service\Content\Resources;
 
-use App\Service\BackBlaze\BackBlaze;
+use App\Service\S3\Client;
 use App\Service\Content\Resource;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -45,7 +45,7 @@ class DefaultFile implements ResourceInterface
     private $extension;
 
     /**
-     * @var BackBlaze
+     * @var Client
      */
     private $blaze;
 
@@ -54,7 +54,7 @@ class DefaultFile implements ResourceInterface
      */
     private $url;
 
-    public function __construct(UploadedFile $uploadedFile, BackBlaze $blaze, string $postType)
+    public function __construct(UploadedFile $uploadedFile, Client $blaze, string $postType)
     {
         $this->blaze = $blaze;
 

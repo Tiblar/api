@@ -1,7 +1,7 @@
 <?php
 namespace App\Service\Content\Resources;
 
-use App\Service\BackBlaze\BackBlaze;
+use App\Service\S3\Client;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Banner implements ResourceInterface
@@ -32,7 +32,7 @@ class Banner implements ResourceInterface
     private $originalName;
 
     /**
-     * @var BackBlaze
+     * @var Client
      */
     private $blaze;
 
@@ -41,7 +41,7 @@ class Banner implements ResourceInterface
      */
     private $url;
 
-    public function __construct(UploadedFile $file, BackBlaze $blaze)
+    public function __construct(UploadedFile $file, Client $blaze)
     {
         $this->blaze = $blaze;
 

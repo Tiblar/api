@@ -1,7 +1,7 @@
 <?php
 namespace App\Service\Content;
 
-use App\Service\BackBlaze\BackBlaze;
+use App\Service\S3\Client;
 use App\Service\Content\ContentException\InvalidException;
 use App\Service\Content\Resources\Avatar;
 use App\Service\Content\Resources\Banner;
@@ -23,7 +23,7 @@ class Resource
     const POST_STREAM = "POST_STREAM";
 
     /**
-     * @var BackBlaze $blaze
+     * @var Client $blaze
      */
     private $blaze;
 
@@ -32,7 +32,7 @@ class Resource
      */
     private $fileTypes;
 
-    public function __construct(BackBlaze $blaze, array $fileTypes)
+    public function __construct(Client $blaze, array $fileTypes)
     {
         $this->blaze = $blaze;
         $this->fileTypes = $fileTypes;

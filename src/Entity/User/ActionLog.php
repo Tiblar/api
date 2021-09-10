@@ -20,7 +20,7 @@ class ActionLog
     static $REQUEST_DELETE_ACCOUNT = "REQUEST_DELETE_ACCOUNT";
     static $AUTH_LOGIN = "AUTH_LOGIN";
 
-    static $BACKBLAZE_CREATE_LARGE_FILE = "BACKBLAZE_CREATE_LARGE_FILE";
+    static $S3_CREATE_LARGE_FILE = "S3_CREATE_LARGE_FILE";
 
     /**
      * @ORM\Id
@@ -96,7 +96,7 @@ class ActionLog
                 self::$AUTH_LOGIN, self::$CHANGE_EMAIL, self::$TWO_FACTOR_DISABLE_EMAIL_REQUEST,
                 self::$RESEND_EMAIL_CONFIRMATION, self::$CHANGE_PASSWORD, self::$CHANGE_USERNAME,
                 self::$REQUEST_DELETE_ACCOUNT, self::$RESET_PASSWORD_REQUEST, self::$RESET_PASSWORD,
-                self::$BACKBLAZE_CREATE_LARGE_FILE
+                self::$S3_CREATE_LARGE_FILE
             ])
         ){
             $this->action = $action;

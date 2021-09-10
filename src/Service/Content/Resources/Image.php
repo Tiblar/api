@@ -1,7 +1,7 @@
 <?php
 namespace App\Service\Content\Resources;
 
-use App\Service\BackBlaze\BackBlaze;
+use App\Service\S3\Client;
 use App\Service\Content\Resource;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -58,7 +58,7 @@ class Image implements ResourceInterface
     private $extension;
 
     /**
-     * @var BackBlaze
+     * @var Client
      */
     private $blaze;
 
@@ -67,7 +67,7 @@ class Image implements ResourceInterface
      */
     private $url;
 
-    public function __construct(UploadedFile $uploadedFile, BackBlaze $blaze)
+    public function __construct(UploadedFile $uploadedFile, Client $blaze)
     {
         $this->blaze = $blaze;
 

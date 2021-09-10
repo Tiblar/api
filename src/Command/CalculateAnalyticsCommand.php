@@ -4,7 +4,7 @@ namespace App\Command;
 use App\Entity\Analytics\PostAnalytics;
 use App\Entity\Analytics\UserAnalytics;
 use App\Entity\Analytics\ViewLog;
-use App\Service\BackBlaze\BackBlaze;
+use App\Service\S3\Client;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,11 +22,11 @@ class CalculateAnalyticsCommand extends Command
     private $em;
 
     /**
-     * @var BackBlaze
+     * @var Client
      */
     private $blaze;
 
-    public function __construct(EntityManagerInterface $em, BackBlaze $blaze, string $name = null)
+    public function __construct(EntityManagerInterface $em, Client $blaze, string $name = null)
     {
         $this->em = $em;
         $this->blaze = $blaze;

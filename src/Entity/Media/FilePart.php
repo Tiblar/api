@@ -56,7 +56,7 @@ class FilePart
     /**
      * @ORM\Column(type="string")
      */
-    private $hash;
+    private $ETag;
 
     /**
      * @ORM\Column(type="datetime")
@@ -151,17 +151,17 @@ class FilePart
     /**
      * @return string
      */
-    public function getHash(): string
+    public function getETag(): string
     {
-        return $this->hash;
+        return $this->ETag;
     }
 
     /**
-     * @param string $hash
+     * @param string $ETag
      */
-    public function setHash(string $hash): void
+    public function setETag(string $ETag): void
     {
-        $this->hash = $hash;
+        $this->ETag = $ETag;
     }
 
     /**

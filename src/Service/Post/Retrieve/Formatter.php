@@ -27,8 +27,6 @@ class Formatter {
      */
     private $addonsBuilder;
 
-    private $dev;
-
     private $domain;
 
     private $bucket;
@@ -37,9 +35,8 @@ class Formatter {
     {
         $this->em = $em;
         $this->addonsBuilder = $addonsBuilder;
-        $this->dev = $params->get('backblaze')['dev'];
-        $this->domain = $params->get('backblaze')['domain'];
-        $this->bucket = $params->get('backblaze')['bucket'];
+        $this->domain = $params->get('s3')['domain'];
+        $this->bucket = $params->get('s3')['bucket'];
     }
 
     public function posts(array $postsIds, array $addons = [])
@@ -101,11 +98,7 @@ class Formatter {
 
             if(isset($post['attachments'])){
                 foreach($post['attachments'] as &$attachment){
-                    if($this->dev){
-                        $attachment['file']['url'] = '//' . $this->domain . '/' . $this->bucket . '/' . $attachment['file']['hash'] . '.' . $attachment['file']['extension'];
-                    }else{
-                        $attachment['file']['url'] = '//' . $this->domain . '/sneed-fs/'.  $attachment['file']['hash'] . '.' . $attachment['file']['extension'];
-                    }
+                    $attachment['file']['url'] = '//' . $this->domain . '/' . $this->bucket . '/'.  $attachment['file']['hash'] . '.' . $attachment['file']['extension'];
                 }
             }
 

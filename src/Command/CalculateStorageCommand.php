@@ -1,7 +1,7 @@
 <?php
 namespace App\Command;
 
-use App\Service\BackBlaze\BackBlaze;
+use App\Service\S3\Client;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,11 +19,11 @@ class CalculateStorageCommand extends Command
     private $em;
 
     /**
-     * @var BackBlaze
+     * @var Client
      */
     private $blaze;
 
-    public function __construct(EntityManagerInterface $em, BackBlaze $blaze, string $name = null)
+    public function __construct(EntityManagerInterface $em, Client $blaze, string $name = null)
     {
         $this->em = $em;
         $this->blaze = $blaze;
@@ -45,7 +45,7 @@ class CalculateStorageCommand extends Command
         $timestamp = $timestamp->modify("-1 day");
 
         $bbIds = $this->em->createQueryBuilder()
-            ->select('f.backBlazeFileId as bbId')
+            ->select('f.s3FileId as bbId')
             ->from('App:Media\FileInit', 'f')
             ->where('f.timestamp < :timestamp')
             ->setParameter('timestamp', $timestamp)
@@ -72,7 +72,7 @@ class CalculateStorageCommand extends Command
 
                 $this->em->createQueryBuilder()
                     ->delete('App:Media\FileInit', 'f')
-                    ->where('f.backBlazeFileId IN (:ids)')
+                    ->where('f.s3FileId IN (:ids)')
                     ->setParameter('ids', $deleteIds)
                     ->getQuery()->getResult();
 

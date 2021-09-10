@@ -88,13 +88,13 @@ parameters:
         audio: 1000
         pdf: 10000
         file: 10000
-    backblaze:
-        bucket: '%env(BACKBLAZE_BUCKET)%'
-        domain: '%env(BACKBLAZE_DOMAIN)%'
-        accountId: '%env(BACKBLAZE_ACCOUNTID)%'
-        keyId: '%env(BACKBLAZE_KEYID)%'
-        key: '%env(BACKBLAZE_KEY)%'
-        dev: '%env(BACKBLAZE_DEV)%'
+    s3:
+        key: '%env(S3_KEY)%'
+        secret: '%env(S3_SECRET)%'
+        bucket: '%env(S3_BUCKET)%'
+        region: '%env(S3_REGION)%'
+        endpoint: '%env(S3_ENDPOINT)%'
+        domain: '%env(S3_DOMAIN)%'
     max_tags: 20
     max_tag_length: 24
     max_title_length: 70
@@ -229,9 +229,9 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
 
-    App\Service\BackBlaze\BackBlaze:
+    App\Service\S3\Client:
         arguments:
-            $settings: '%backblaze%'
+            $settings: '%s3%'
 
     App\Service\Content\Resource:
         arguments:

@@ -8,9 +8,10 @@ use App\Entity\Media\FileInit;
 use App\Entity\Media\FilePart;
 use App\Entity\User\ActionLog;
 use App\Entity\User\User;
-use App\Service\BackBlaze\BackBlaze;
+use App\Service\S3\Client;
 use App\Service\Content\ContentException\InvalidException;
 use App\Service\User\UserLogger;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,7 +21,7 @@ class LargeFileController extends ApiController
     /**
      * @Route("/post/large-file", name="start_large_file", methods={"POST"})
      */
-    public function start(Request $request, BackBlaze $blaze, UserLogger $logger)
+    public function start(Request $request, Client $blaze, UserLogger $logger)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -49,11 +50,11 @@ class LargeFileController extends ApiController
         $since = new \DateTime();
         $since = $since->modify("-5 minutes");
 
-        $count = $logger->count([ActionLog::$BACKBLAZE_CREATE_LARGE_FILE], $since, [
+        $count = $logger->count([ActionLog::$S3_CREATE_LARGE_FILE], $since, [
             'user_id' => $user->getId(),
         ]);
 
-        if($count[ActionLog::$BACKBLAZE_CREATE_LARGE_FILE] > 15){
+        if($count[ActionLog::$S3_CREATE_LARGE_FILE] > 15){
             return $this->respondWithErrors(
                 [],
                 'Please wait a few minutes requesting again.',
@@ -120,13 +121,13 @@ class LargeFileController extends ApiController
         $fileInit->setFileSize(0);
         $fileInit->setMaxFileSize($maxSize);
 
-        $fileId = $blaze->startLargeFile($fileInit->getHash() . '.' . $fileInit->getExtension(), $sha1);
+        $fileId = $blaze->startLargeFile($fileInit->getHash() . '.' . $fileInit->getExtension());
 
-        $fileInit->setBackBlazeFileId($fileId);
+        $fileInit->setS3FileId($fileId);
 
         $em->flush();
 
-        $logger->add($user, ActionLog::$BACKBLAZE_CREATE_LARGE_FILE);
+        $logger->add($user, ActionLog::$S3_CREATE_LARGE_FILE);
 
         return $this->respond([
             'file_id' => $fileInit->getId(),
@@ -137,7 +138,7 @@ class LargeFileController extends ApiController
     /**
      * @Route("/post/large-file/{fileId}/{partNumber}", name="large_file_upload_segment", requirements={"partNumber" = "^([1-9][0-9]{0,2}|1000)$"}, methods={"POST"})
      */
-    public function uploadSegment(Request $request, BackBlaze $blaze, $fileId, $partNumber)
+    public function uploadSegment(Request $request, Client $s3, $fileId, $partNumber)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -190,15 +191,16 @@ class LargeFileController extends ApiController
 
         $part = new FilePart();
 
-        $blaze->uploadPart(
+        $etag = $s3->uploadPart(
+            $fileInit->getHash() . '.' . $fileInit->getExtension(),
             file_get_contents($filePartData->getRealPath()),
-            $fileInit->getBackBlazeFileId(),
+            $fileInit->getS3FileId(),
             $partNumber
         );
 
         $part->setUserId($this->getUser()->getId());
         $part->setFileInitId($fileInit->getId());
-        $part->setHash(sha1_file($filePartData->getRealPath()));
+        $part->setETag($etag);
         $part->setPartSize($filePartData->getSize() / 1000 / 1000 / 1000);
         $part->setPart($partNumber);
 
@@ -228,7 +230,7 @@ class LargeFileController extends ApiController
     /**
      * @Route("/post/large-file/{fileId}/finish", name="finish_large_file", methods={"POST"})
      */
-    public function finish(Request $request, BackBlaze $blaze, $fileId)
+    public function finish(Request $request, Client $client, LoggerInterface $logger, $fileId)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -243,8 +245,8 @@ class LargeFileController extends ApiController
             ], null, 404);
         }
 
-        $data = $em->createQueryBuilder()
-            ->select('COUNT(p.id) as count, p.hash as hash')
+        $parts = $em->createQueryBuilder()
+            ->select('p.part as PartNumber, p.ETag as ETag')
             ->from('App:Media\FilePart', 'p')
             ->where('p.fileInitId = :fileId AND p.userId = :userId')
             ->setParameter('fileId', $fileId)
@@ -253,20 +255,22 @@ class LargeFileController extends ApiController
             ->getQuery()
             ->getArrayResult();
 
-        $count = array_column($data, 'count');
-        $hashes = array_column($data, 'hash');
+        $count = count($parts);
 
         if($count < $fileInit->getPartCount()){
             return $this->respondWithErrors([
                 'id' => 'This file is not fully uploaded.'
-            ], null, 400);
+            ]);
         }
 
-        $hashName = $fileInit->getHash() . '.' . $fileInit->getExtension();
-
         try{
-            $url = $blaze->finishLargeFile($fileInit->getBackBlazeFileId(), $hashes, $hashName);
+            $url = $client->finishLargeFile(
+                $fileInit->getHash() . '.' . $fileInit->getExtension(),
+                $fileInit->getS3FileId(),
+                $parts,
+            );
         }catch(\Exception $e) {
+            $logger->debug($e->getMessage());
             return $this->respondWithErrors([
                 'cdn' => "Something went wrong."
             ], null, 500);
@@ -292,7 +296,7 @@ class LargeFileController extends ApiController
     /**
      * @Route("/post/large-file/{fileId}", name="delete_large_file", methods={"DELETE"})
      */
-    public function delete(Request $request, BackBlaze $blaze, $fileId)
+    public function delete(Request $request, Client $blaze, $fileId)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -317,7 +321,7 @@ class LargeFileController extends ApiController
             ], null, 404);
         }
 
-        $blaze->deleteLargeFile($fileInit->getBackBlazeFileId());
+        $blaze->deleteLargeFile($fileInit->getS3FileId());
 
         $em->getConnection()->beginTransaction();
 
@@ -340,7 +344,7 @@ class LargeFileController extends ApiController
                 ->setParameter('hash', $fileInit->getHash())
                 ->getQuery()->getResult();
 
-            $user->setStorage($user->getStorage() - $fileInit->getSize());
+            $user->setStorage($user->getStorage() - $fileInit->getFileSize());
 
         }catch(\Exception $e){
             $em->getConnection()->rollback();

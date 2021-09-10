@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * )
  * @ORM\Table(indexes={
  *     @ORM\Index(name="id_idx", columns={"id"}),
- *     @ORM\Index(name="backblaze_file_id_idx", columns={"back_blaze_file_id"}),
+ *     @ORM\Index(name="s3_file_id_idx", columns={"s3_file_id"}),
  *     @ORM\Index(name="user_id_idx", columns={"user_id", "status"}),
  * })
  */
@@ -46,7 +46,7 @@ class FileInit
     /**
      * @ORM\Column(type="string")
      */
-    private $backBlazeFileId;
+    private $s3FileId;
 
     /**
      * @ORM\Column(type="decimal", precision=16, scale=8)
@@ -160,17 +160,17 @@ class FileInit
     /**
      * @return string
      */
-    public function getBackBlazeFileId(): string
+    public function getS3FileId(): string
     {
-        return $this->backBlazeFileId;
+        return $this->s3FileId;
     }
 
     /**
      * @param string $fileId
      */
-    public function setBackBlazeFileId(string $fileId): void
+    public function setS3FileId(string $fileId): void
     {
-        $this->backBlazeFileId = $fileId;
+        $this->s3FileId = $fileId;
     }
 
     /**
