@@ -225,7 +225,7 @@ services:
             - "@doctrine.orm.entity_manager"
 
     App\Event\ExceptionListener:
-        arguments: ["%kernel.environment%"]
+        arguments: ["%kernel.environment%", "@monolog.logger"]
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
 

@@ -3,6 +3,7 @@
 namespace App\Event;
 
 use App\Http\ApiResponse;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -11,9 +12,12 @@ class ExceptionListener
 {
     private $env;
 
-    public function __construct($env)
+    private $logger;
+
+    public function __construct($env, LoggerInterface $logger)
     {
         $this->env = $env;
+        $this->logger = $logger;
     }
 
     /**
@@ -52,6 +56,7 @@ class ExceptionListener
         }
 
         if($statusCode === 500 && $this->env === "prod"){
+            $this->logger->critical($exception->getMessage());
             $message = "An error occurred that was not expected. Contact support if this continues.";
         }
 
