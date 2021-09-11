@@ -120,7 +120,7 @@ UPDATE `users` set admin = 1 where name = "@tb_00000000000000000000:localhost:80
 ```
 
 ### Setup OAuth application
-Replace `MATRIX_AUTH_REDIRECT_URL` with your URL
+Replace `URL` with your matrix redirect_uri like "http://matrix.sneed.supply/_synapse/client/oidc/callback"
 ```
-php bin/console app:create-oauth-matrix-application MATRIX_AUTH_REDIRECT_URL
+php bin/console app:create-oauth-matrix-application URL
 ```
