@@ -118,3 +118,9 @@ Run the following SQL or the SQL provided by the command:
 ```
 UPDATE `users` set admin = 1 where name = "@tb_00000000000000000000:localhost:8008";
 ```
+
+### Setup OAuth application
+Replace `MATRIX_AUTH_REDIRECT_URL` with your URL
+```
+php bin/console app:create-oauth-matrix-application MATRIX_AUTH_REDIRECT_URL
+```

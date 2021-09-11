@@ -28,7 +28,7 @@ class MatrixLoginTokenController extends ApiController
                 ], 'Authentication error.', 401);
             }
 
-            $avatarContents = file_get_contents("https:" . $user->getInfo()->getAvatar());
+            $avatarContents = file_get_contents("https:" . $user->getInfo()->getAvatar()->getURL());
 
             $matrix->createUser($user->getId());
 

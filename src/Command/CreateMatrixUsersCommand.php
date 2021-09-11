@@ -81,8 +81,9 @@ class CreateMatrixUsersCommand extends Command
 
         while(true){
             $list = $this->em->createQueryBuilder()
-                ->select('u')
+                ->select('u', 'a')
                 ->from('App:User\UserInfo', 'u')
+                ->leftJoin('u.avatar', 'a')
                 ->where('u.id NOT IN (:ids)')
                 ->setParameter('ids', $matrixUserIds)
                 ->setMaxResults(100)
