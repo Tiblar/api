@@ -2,19 +2,10 @@
 namespace App\Controller\Actions\Post;
 
 use App\Controller\ApiController;
-use App\Entity\Media\Attachment;
-use App\Entity\Media\File;
-use App\Entity\Post\Favorite;
 use App\Entity\Post\Post;
 use App\Entity\User\User;
-use App\Service\Content\Resource;
-use App\Service\Content\Resources\Image;
 use App\Service\Post\Delete;
-use App\Service\Post\Tags;
-use App\Service\Truncate;
-use Doctrine\ORM\Query;
 use Symfony\Component\HttpFoundation\Request;
-use voku\helper\AntiXSS;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 

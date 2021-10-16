@@ -49,7 +49,11 @@ class Client
             'Key' => $filename,
         ]);
 
-        return $result['DeleteMarker'];
+        if ($result['DeleteMarker']) {
+            return $result['DeleteMarker'];
+        } else {
+            throw new \Exception("Unable to delete.");
+        }
     }
 
     public function startLargeFile(string $filename): string

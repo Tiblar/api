@@ -20,6 +20,7 @@
         "coinpaymentsnet/coinpayments-php": "^1.4",
         "doctrine/doctrine-bundle": "^2.2",
         "doctrine/doctrine-migrations-bundle": "^3.0",
+        "doctrine/orm": "^2.10",
         "endroid/qr-code": "^3.9",
         "fakerphp/faker": "^1.13",
         "friendsofsymfony/rest-bundle": "^3.0",
@@ -43,8 +44,6 @@
         "symfony/serializer": "5.2.*",
         "symfony/yaml": "5.2.*",
         "voku/anti-xss": "^4.1"
-    },
-    "require-dev": {
     },
     "config": {
         "optimize-autoloader": true,
