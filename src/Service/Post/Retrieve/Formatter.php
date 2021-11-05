@@ -102,7 +102,7 @@ class Formatter {
 
                     if(isset($attachment['thumbnails']) && is_array($attachment['thumbnails'])){
                         foreach($attachment['thumbnails'] as &$thumbnail){
-                            $thumbnail['file']['url'] = '//' . $this->domain . '/' . $this->bucket . '/'.  $attachment['file']['hash'] . '.' . $attachment['file']['extension'];
+                            $thumbnail['file']['url'] = '//' . $this->domain . '/' . $this->bucket . '/'.  $thumbnail['file']['hash'] . '.' . $thumbnail['file']['extension'];
                         }
                     }
                 }
