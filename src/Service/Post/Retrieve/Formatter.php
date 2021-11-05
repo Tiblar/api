@@ -99,6 +99,12 @@ class Formatter {
             if(isset($post['attachments'])){
                 foreach($post['attachments'] as &$attachment){
                     $attachment['file']['url'] = '//' . $this->domain . '/' . $this->bucket . '/'.  $attachment['file']['hash'] . '.' . $attachment['file']['extension'];
+
+                    if(isset($attachment['thumbnails']) && is_array($attachment['thumbnails'])){
+                        foreach($attachment['thumbnails'] as &$thumbnail){
+                            $thumbnail['file']['url'] = '//' . $this->domain . '/' . $this->bucket . '/'.  $attachment['file']['hash'] . '.' . $attachment['file']['extension'];
+                        }
+                    }
                 }
             }
 
