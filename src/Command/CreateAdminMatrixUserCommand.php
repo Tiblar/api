@@ -61,7 +61,7 @@ class CreateAdminMatrixUserCommand extends Command
 
         $this->matrixInterface->createUser(Snowflake::createSystemSnowflake());
 
-        $io->writeln("UPDATE users set admin = 1 where name = '@fc_" . Snowflake::createSystemSnowflake() . ":localhost:8008';");
+        $io->writeln("UPDATE users set admin = 1 where name = '@fc_" . Snowflake::createSystemSnowflake() . ":matrix.sneed.supply:8008';");
 
         return Command::SUCCESS;
     }
