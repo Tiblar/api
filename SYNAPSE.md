@@ -116,7 +116,7 @@ php bin/console app:create-admin-matrix-user
 
 Run the following SQL or the SQL provided by the command:
 ```
-UPDATE `users` set admin = 1 where name = "@tb_00000000000000000000:localhost:8008";
+UPDATE `users` set admin = 1 where name = "@fc_00000000000000000000:localhost:8008";
 ```
 
 ### Setup OAuth application

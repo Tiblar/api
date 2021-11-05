@@ -40,7 +40,7 @@ class MatrixInterface {
         $schema = $this->environment === 'dev' ? "http://" : "https://";
 
         $client = new Client();
-        $res = $client->request('GET', $schema . $matrixServer . "/_synapse/admin/v2/users/@tb_" . $userId . ":" . $matrixServer, [
+        $res = $client->request('GET', $schema . $matrixServer . "/_synapse/admin/v2/users/@fc_" . $userId . ":" . $matrixServer, [
             'http_errors' => false,
             'allow_redirects' => false,
             'headers' => [
@@ -63,7 +63,7 @@ class MatrixInterface {
         $data = $this->getUserTokenAndDevice($userId);
 
         $client = new Client();
-        $res = $client->request('DELETE', $schema . $matrixServer . "/_synapse/admin/v2/users/@tb_" . $userId . ":" . $matrixServer . "/devices/" . $data['device_id'], [
+        $res = $client->request('DELETE', $schema . $matrixServer . "/_synapse/admin/v2/users/@fc_" . $userId . ":" . $matrixServer . "/devices/" . $data['device_id'], [
             'http_errors' => false,
             'allow_redirects' => false,
             'headers' => [
@@ -122,7 +122,7 @@ class MatrixInterface {
         }
 
         $client = new Client();
-        $res = $client->request('PUT', $schema . $matrixServer . "/_synapse/admin/v2/users/@tb_" . $user->getId() . ":" . $matrixServer, [
+        $res = $client->request('PUT', $schema . $matrixServer . "/_synapse/admin/v2/users/@fc_" . $user->getId() . ":" . $matrixServer, [
             'http_errors' => false,
             'allow_redirects' => false,
             'headers' => [

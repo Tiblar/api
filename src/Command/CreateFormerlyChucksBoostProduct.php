@@ -62,6 +62,7 @@ class CreateFormerlyChucksBoostProduct extends Command
         $attribute = new ProductAttribute();
         $this->em->persist($attribute);
 
+        /**
         $stripeProduct = $this->stripe->createProduct($product->getId(), $baseTitle, $baseDescription);
 
         $recurring = [
@@ -114,6 +115,7 @@ class CreateFormerlyChucksBoostProduct extends Command
             $storageTitle . " (annual)",
             $recurring
         );
+        **/
 
         $attribute->setUserId(Snowflake::createSystemSnowflake());
         $attribute->setProduct($product);
@@ -123,8 +125,11 @@ class CreateFormerlyChucksBoostProduct extends Command
         $attribute->setValue(100);
         $attribute->setMinQuantity(1);
         $attribute->setMaxQuantity(80);
+
+        /**
         $attribute->setStripePriceId($stripePriceAttribute->id);
         $attribute->setStripePriceAnnualDiscountId($stripePriceAnnualDiscountAttribute->id);
+        **/
 
         $product->setTitle($baseTitle);
         $product->setDescription($baseDescription);
@@ -137,9 +142,12 @@ class CreateFormerlyChucksBoostProduct extends Command
         $product->setPublished(true);
         $product->setUserLimit(null);
         $product->addAttribute($attribute);
+
+        /**
         $product->setStripeProductId($stripeProduct->id);
         $product->setStripePriceId($stripePrice->id);
         $product->setStripePriceAnnualDiscountId($stripePriceAnnualDiscount->id);
+        **/
 
         $this->em->flush();
 

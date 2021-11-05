@@ -48,7 +48,7 @@ class MatrixLoginTokenController extends ApiController
         return $this->respond([
             'access_token' => $data['access_token'],
             'device_id' => $data['device_id'],
-            'user_id' => "@tb_" . $this->getUser()->getId() . ":" . $matrixServer,
+            'user_id' => "@fc_" . $this->getUser()->getId() . ":" . $matrixServer,
             'home_server' => $schema . $matrixServer,
         ]);
     }

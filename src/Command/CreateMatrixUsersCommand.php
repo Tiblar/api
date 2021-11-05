@@ -123,7 +123,7 @@ class CreateMatrixUsersCommand extends Command
 
                 $start = false;
 
-                $externalIds .= " ('oidc-formerly-chucks', '" . $arr['id'] . "', '@tb_" . $arr['id'] . ":" . $matrixServer . "')";
+                $externalIds .= " ('oidc-formerly-chucks', '" . $arr['id'] . "', '@fc_" . $arr['id'] . ":" . $matrixServer . "')";
             }
         }
 
