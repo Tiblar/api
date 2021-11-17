@@ -4,6 +4,7 @@ namespace App\Service\Billing;
 use App\Entity\Billing\Invoice;
 use App\Entity\Billing\Order;
 use App\Entity\Billing\PaymentMethod;
+use Psr\Log\LoggerInterface;
 use CoinpaymentsAPI;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,11 +43,17 @@ class CoinPayments
      */
     private $ipnSecret;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     public function __construct(
         EntityManagerInterface $em, Security $security,
         string $privateKey, string $publicKey,
         string $merchantId, string $ipnURL,
-        string $ipnSecret
+        string $ipnSecret,
+        LoggerInterface $logger
     )
     {
         $this->em = $em;
@@ -55,6 +62,7 @@ class CoinPayments
         $this->merchantId = $merchantId;
         $this->ipnURL = $ipnURL;
         $this->ipnSecret = $ipnSecret;
+        $this->logger = $logger;
     }
 
     /**
@@ -98,6 +106,7 @@ class CoinPayments
                 $this->ipnURL
             );
         }catch (\Exception $e){
+            $this->logger->error($e->getMessage());
             return null;
         }
 
