@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+  database-api:
+    image: mysql:8.0
+    networks:
+      - fc
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-app}
+      # You should definitely change the password in production
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_USER: ${POSTGRES_USER:-symfony}
+    ports:
+      - '3306:3306'
+    volumes:
+      - db-data:/var/lib/mysql:rw
+  php-fpm:
+    container_name: php-fpm
+    networks:
+      - fc
+    build:
+      context: ./docker/php-fpm
+    ports:
+      - '9000:9000'
+    volumes:
+      - ./:/var/www/api
+    depends_on:
+      - database-api
+  nginx-api:
+    container_name: nginx-api
+    image: nginx:stable-alpine
+    networks:
+      - fc
+    ports:
+      - '8181:8181'
+    volumes:
+      - ./:/var/www/api
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php-fpm
+      - database-api
+
+volumes:
+  db-data:
+
+networks:
+  fc:
+    name: formerlychucks
+    ipam:
+      config:
+        - subnet: 172.16.57.0/24

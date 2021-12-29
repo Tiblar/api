@@ -1,3 +1,7 @@
+## Running in Docker
+
+Start the API server with: `docker-compose up --build`
+
 # System Requirements
 `apcu`
 `imagick`
