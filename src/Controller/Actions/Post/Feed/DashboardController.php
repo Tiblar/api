@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class DashboardController extends ApiController
 {
     /**
-     * @Route("/post/feed/dashboard/newest", METHODS={"GET"}, name="feed_dashboard_newest")
+     * @Route("/post/feed/dashboard/newest", methods={"GET"}, name="feed_dashboard_newest")
      */
     public function newest(Request $request, Dashboard $fetch)
     {
