@@ -12,7 +12,8 @@ RUN apt-get update \
     && pecl install imagick \
     && docker-php-ext-enable imagick \
     && docker-php-ext-install bcmath \
-    && docker-php-ext-install gd
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) gd
 
 WORKDIR /var/www/api
 
