@@ -115,7 +115,7 @@ class PurchaseController extends ApiController
             ]);
         }
 
-        if(in_array($method, [PaymentMethod::$TYPE_BITCOIN, PaymentMethod::$TYPE_MONERO])) {
+        if(in_array($method, PaymentMethod::cryptoTypes())) {
             return $this->forward('App\Controller\Actions\Market\Purchase\CryptoController::crypto', [
                 'request' => $request,
                 'order' => $order,

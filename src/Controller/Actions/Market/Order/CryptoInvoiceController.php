@@ -54,7 +54,7 @@ class CryptoInvoiceController extends ApiController
             ], null, 404);
         }
 
-        if(!in_array($invoice->getPaymentMethod()->getType(), [PaymentMethod::$TYPE_MONERO, PaymentMethod::$TYPE_BITCOIN])){
+        if(!in_array($invoice->getPaymentMethod()->getType(), PaymentMethod::cryptoTypes())){
             return $this->respondWithErrors([
                 'id' => 'Order must be a crypto type.'
             ], null, 404);

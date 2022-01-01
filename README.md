@@ -52,6 +52,8 @@ php bin/console app:train-spam-filter --mode train
 Cron
 ```
 0 */24 * * * php /var/www/tiblar-api/bin/console app:calculate-storage
+# Only needed incase we miss IPNs
+0 * * * * php /var/www/tiblar-api/bin/console app:expire-invoices
 0 * * * * php /var/www/tiblar-api/bin/console app:calculate-analytics
 0 * * * * php /var/www/tiblar-api/bin/console app:rate-spam-ips
 ```

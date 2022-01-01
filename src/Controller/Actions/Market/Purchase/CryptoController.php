@@ -57,7 +57,7 @@ class CryptoController extends ApiController
         $transaction = $coinPayments->createTransaction($invoice, $order, $method);
 
         if(is_null($transaction)){
-            return $this->respond([
+            return $this->respondWithErrors([
                 'crypto' => "Something went wrong generating a crypto address. Contact support.",
             ]);
         }
