@@ -40,6 +40,7 @@ services:
       - '9000:9000'
     volumes:
       - ./:/var/www/api
+      - ./docker/php-fpm/php-overrides.ini:/usr/local/etc/php/conf.d/custom.ini
     depends_on:
       - database-api
   nginx-api:
