@@ -11,6 +11,7 @@ use App\Service\Search\Video;
 use App\Service\User\Block;
 use App\Service\User\Follow;
 use App\Service\User\Privacy;
+use App\Service\Transcoding\Turntable;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Routing\Annotation\Route;
@@ -48,6 +49,7 @@ class GetPostController extends ApiController
             ->getQuery()
             ->getOneOrNullResult();
 
+        // has user, title, video cat, and attachments, and not last?
         if(
             !is_null($userId) &&
             !is_null($post[0]['title']) &&
@@ -85,6 +87,21 @@ class GetPostController extends ApiController
             }
         }
 
+        if(
+            //!is_null($userId) &&
+            !is_null($post[0]['title']) &&
+            !empty($post[0]['video_categories']) &&
+            count($post[0]['attachments']) > 0
+        ){
+          $ext = pathinfo($post[0]['attachments'][0]['file']['url'], PATHINFO_EXTENSION);
+          $file = $post[0]['attachments'][0]['file']['hash'] . '.' . $ext;
+          $tc = new Turntable();
+          //echo $file;
+          $result = $tc->transcode($file);
+          // insert into attachments
+          $post[0]['attachments'][0]['available_transcoding'] = json_decode($result, true);
+        }
+
         $user = $em->getRepository(User::class)
             ->findSanitizedUser($post[0]['author']['id']);
 
@@ -120,7 +137,7 @@ class GetPostController extends ApiController
 
 
         return $this->respond([
-            'posts' => $post
+            'posts' => $post,
         ]);
     }
 }
