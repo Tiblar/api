@@ -88,7 +88,6 @@ class GetPostController extends ApiController
         }
 
         if(
-            //!is_null($userId) &&
             !is_null($post[0]['title']) &&
             !empty($post[0]['video_categories']) &&
             count($post[0]['attachments']) > 0
