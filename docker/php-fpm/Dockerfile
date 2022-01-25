@@ -2,7 +2,7 @@ FROM php:7.4-fpm
 
 RUN apt-get update \
     && apt-get install -y zlib1g-dev libpq-dev g++ git libicu-dev zip \
-      libmagickwand-dev libzip-dev zip sox libsox-fmt-all ffmpeg \
+      libmagickwand-dev libzip-dev libpng-dev libfreetype6-dev libjpeg62-turbo-dev zip sox libsox-fmt-all ffmpeg \
     && docker-php-ext-install intl opcache pdo pdo_mysql \
     && pecl install apcu \
     && docker-php-ext-install pdo pdo_mysql \
@@ -12,7 +12,8 @@ RUN apt-get update \
     && pecl install imagick \
     && docker-php-ext-enable imagick \
     && docker-php-ext-install bcmath \
-    && docker-php-ext-install gd
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) gd
 
 WORKDIR /var/www/api
 

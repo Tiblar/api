@@ -59,7 +59,7 @@ class User implements UserInterface
     private $verified = false;
 
     /**
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="json")
      */
     private $roles = ["ROLE_USER"];
 

@@ -83,6 +83,26 @@ class CoinPayments
             $crypto = "XMR";
         }
 
+        if($paymentMethod === PaymentMethod::$TYPE_LITECOIN){
+            $crypto = "LTC";
+        }
+
+        if($paymentMethod === PaymentMethod::$TYPE_BITCOIN_CASH){
+            $crypto = "BCH";
+        }
+
+        if($paymentMethod === PaymentMethod::$TYPE_TETHER){
+            $crypto = "USDT.TRC20";
+        }
+
+        if($paymentMethod === PaymentMethod::$TYPE_USD_COIN){
+            $crypto = "USDC.TRC20";
+        }
+
+        if($paymentMethod === PaymentMethod::$TYPE_DOGE){
+            $crypto = "DOGE";
+        }
+
         if(is_null($crypto)){
             throw new \Exception("Invalid payment method.");
         }
@@ -110,19 +130,26 @@ class CoinPayments
             return null;
         }
 
-        if(isset($transaction['result'])){
-            $transaction = $transaction['result'];
-        }else{
+        if(isset($transaction['error']) && $transaction['error'] !== "ok") {
+            $this->logger->error("CoinPayments error: {$transaction['error']}");
             return null;
         }
 
+        if(isset($transaction['result'])){
+            $transaction = $transaction['result'];
+        }else{
+            $this->logger->error("Transaction is empty.");
+            return null;
+        }
 
         if(
             !isset($transaction['amount']) || !isset($transaction['address']) ||
             !isset($transaction['txn_id']) || !isset($transaction['timeout'])
         ){
+            $this->logger->error("Transaction does not have crypto info.");
             return null;
         }
+        $this->logger->error($transaction['amount']);
 
         return $transaction;
     }

@@ -19,6 +19,19 @@ class PaymentMethod
     static $TYPE_PAYPAL = "PAYPAL";
     static $TYPE_BITCOIN = "BITCOIN";
     static $TYPE_MONERO = "MONERO";
+    static $TYPE_LITECOIN = "LITECOIN";
+    static $TYPE_BITCOIN_CASH = "BITCOIN_CASH";
+    static $TYPE_TETHER = "TETHER";
+    static $TYPE_USD_COIN = "USD_COIN";
+    static $TYPE_DOGE = "DOGE";
+
+    static public function cryptoTypes(): array
+    {
+        return [
+            self::$TYPE_BITCOIN, self::$TYPE_MONERO, self::$TYPE_LITECOIN,
+            self::$TYPE_BITCOIN_CASH, self::$TYPE_TETHER, self::$TYPE_USD_COIN, self::$TYPE_DOGE,
+        ];
+    }
 
     /**
      * @ORM\Id
@@ -143,7 +156,8 @@ class PaymentMethod
     {
         if(
         in_array($type, [
-            self::$TYPE_STRIPE, self::$TYPE_PAYPAL, self::$TYPE_BITCOIN, self::$TYPE_MONERO
+            self::$TYPE_STRIPE, self::$TYPE_PAYPAL, self::$TYPE_BITCOIN, self::$TYPE_MONERO, self::$TYPE_LITECOIN,
+            self::$TYPE_BITCOIN_CASH, self::$TYPE_TETHER, self::$TYPE_USD_COIN, self::$TYPE_DOGE,
         ])
         ){
             $this->type = $type;
