@@ -12,6 +12,7 @@ use App\Structure\Post\SanitizedReply;
 use App\Structure\User\BlockStructure;
 use App\Structure\User\FollowStructure;
 use App\Structure\User\SanitizedUser;
+use App\Service\Transcoding\Turntable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -105,6 +106,12 @@ class Formatter {
                             $thumbnail['file']['url'] = '//' . $this->domain . '/' . $this->bucket . '/'.  $thumbnail['file']['hash'] . '.' . $thumbnail['file']['extension'];
                         }
                     }
+
+                    $ext = pathinfo($attachment['file']['url'], PATHINFO_EXTENSION);
+                    $file = $attachment['file']['hash'] . '.' . $ext;
+                    $tc = new Turntable();
+                    $result = $tc->transcode($file);
+                    $attachment['available_transcoding'] = json_decode($result, true);
                 }
             }
 
