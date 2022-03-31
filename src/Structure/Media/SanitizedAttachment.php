@@ -17,6 +17,8 @@ class SanitizedAttachment
 
     private $file;
 
+    private $available_transcoding;
+
     public function __construct(array $arr)
     {
         if(isset($arr['id'])){
@@ -46,6 +48,10 @@ class SanitizedAttachment
 
         if(isset($arr['thumbnails']) && is_array($arr['thumbnails'])){
             $this->setThumbnails($arr['thumbnails']);
+        }
+
+        if(isset($arr['available_transcoding'])){
+            $this->setAvailableTranscoding($arr['available_transcoding']);
         }
     }
 
@@ -113,6 +119,23 @@ class SanitizedAttachment
         $this->row = $row;
     }
 
+
+    /**
+     * @return array
+     */
+    public function getAvailableTranscoding(): array
+    {
+        return $this->available_transcoding;
+    }
+    /**
+     * @param array $row
+     */
+    public function setAvailableTranscoding(array $ats): void
+    {
+        $this->available_transcoding = $ats;
+    }
+
+
     /**
      * @return string
      */
@@ -175,6 +198,7 @@ class SanitizedAttachment
             'thumbnails' => $this->getThumbnails(),
             'file' => $this->getFile()->toArray(),
             'timestamp' => $this->getTimestamp()->format('c'),
+            'available_transcoding' => $this->getAvailableTranscoding(),
         ];
     }
 }
