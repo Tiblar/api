@@ -515,7 +515,7 @@ class CreateController extends ApiController
                 }
 
                 $duration = $ffprobe
-                    ->format($file->getURL())
+                    ->format('https:' . $file->getURL())
                     ->get('duration');
 
                 $file->setDuration(floor($duration));
@@ -569,7 +569,7 @@ class CreateController extends ApiController
                     }
 
                     $duration = $ffprobe
-                        ->format($file->getURL())
+                        ->format('https:' . $file->getURL())
                         ->get('duration');
 
                     $sec = 0;
@@ -597,7 +597,7 @@ class CreateController extends ApiController
                     $tmpFile = stream_get_meta_data($tmpHandle)['uri'];
 
                     $ffmpeg
-                        ->open($file->getURL())
+                        ->open('https:' . $file->getURL())
                         ->frame(FFMpeg\Coordinate\TimeCode::fromSeconds($randSec))
                         ->addFilter(new FFMpeg\Filters\Frame\CustomFrameFilter('scale=1280x720'))
                         ->save($tmpFile);
