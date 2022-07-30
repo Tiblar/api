@@ -71,6 +71,7 @@ class RemoveUnusedFilesCommand extends Command
             ))
             ->andWhere('f.fileSize > :minSize')
             ->setParameter('minSize', 0.00025)
+            ->orderBy('CHAR_LENGTH(f.id)', 'ASC')
             ->orderBy('f.id', 'ASC')
             ->getQuery()
             ->getArrayResult();
