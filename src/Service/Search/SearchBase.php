@@ -60,18 +60,18 @@ abstract class SearchBase {
         $block = $this->addonsBuilder->getBlock();
 
         $blocked = empty($block->getBlocking()) ? [1, 2] : $block->getBlocking();
-        $followed = empty($follow->getFollowing()) ? [1, 2] : $follow->getFollowing();
-
+        //$followed = empty($follow->getFollowing()) ? [1, 2] : $follow->getFollowing();
+        // i.id NOT IN (:following) AND
         $userIds = $this->em->createQuery("SELECT i.id as author FROM App:User\UserInfo i
-                                    WHERE 
-                                    i.id NOT IN (:following) AND i.id NOT IN (:blocking) 
+                                    WHERE
+                                     i.id NOT IN (:blocking)
                                         AND ((i.username like :search AND i.nsfw = false)
                                         OR (i.username = :query))
                                     ORDER BY i.followerCount DESC")
             ->setParameter('search', $query . '%')
             ->setParameter('query', $query)
             ->setParameter('blocking', $blocked)
-            ->setParameter('following', $followed)
+            //->setParameter('following', $followed)
             ->setMaxResults(6)
             ->getArrayResult();
 
