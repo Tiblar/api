@@ -44,7 +44,7 @@ class EmailToken
     public function __construct()
     {
         $expireTimestamp = new \DateTime();
-        $expireTimestamp->modify("+3 minutes");
+        $expireTimestamp->modify("+30 minutes");
 
         $this->expireTimestamp = $expireTimestamp;
         $this->timestamp = new \DateTime();
