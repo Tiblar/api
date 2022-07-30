@@ -33,7 +33,7 @@ class Snowflake extends AbstractIdGenerator
     }
 
     /**
-     * Create a snowflake
+     * Create an extremely flawed snowflake for MySQL/MariaDB
      *
      * @return string
      * @throws InvalidArgumentException
@@ -51,6 +51,7 @@ class Snowflake extends AbstractIdGenerator
         $cacheValue = $cache->getItem( 'snowflake_inc');
 
         $microtime = str_pad(
+            //                                     1641024000
             decbin(round(microtime(true) * 1000) - 1420070400000),
             41,
             "0",
