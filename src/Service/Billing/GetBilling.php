@@ -54,6 +54,7 @@ class GetBilling
             ->andWhere('c.service = :paypal')
             ->setParameter('userId', $userId)
             ->setParameter('paypal', Connection::$SERVICE_PAYPAL)
+            ->orderBy('CHAR_LENGTH(c.id)', 'DESC')
             ->orderBy('c.id', 'DESC')
             ->getQuery()
             ->getArrayResult();
