@@ -35,7 +35,7 @@ class RateSpamIpsCommand extends Command
     {
         $this->em->createQueryBuilder()
             ->update(IpList::class, 'i')
-            ->set('i.rating', "(i.rating - 0.05")
+            ->set('i.rating', "(i.rating - 0.05)")
             ->getQuery()
             ->execute();
 
