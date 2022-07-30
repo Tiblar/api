@@ -39,7 +39,7 @@
         "symfony/mailer": "5.2.*",
         "symfony/maker-bundle": "^1.29",
         "symfony/mime": "5.2.*",
-        "symfony/monolog-bundle": "^3.6",
+        "symfony/monolog-bundle": "^3.8",
         "symfony/sendgrid-mailer": "5.2.*",
         "symfony/serializer": "5.2.*",
         "symfony/yaml": "5.2.*",
