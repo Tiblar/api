@@ -53,7 +53,8 @@ class Multiple
 
         $qb->setParameter('postIds', $postIds);
 
-        $qb->orderBy('p.id', 'DESC');
+        //$qb->orderBy('p.id', 'DESC');
+        $qb->orderBy('p.timestamp', 'DESC');
 
         $ids = $qb->getQuery()->getArrayResult();
 
