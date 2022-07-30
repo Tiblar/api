@@ -31,7 +31,7 @@ class LargeFileController extends ApiController
 
         if($fileSize <= 50000000){
             return $this->respondWithErrors([
-                'file_size' => 'The file size must be greater than 50000000 bytes.'
+                'file_size' => 'The file size must be greater than 50,000,000 bytes.'
             ], 'The file size must be greater than 0 bytes.');
         }
 
