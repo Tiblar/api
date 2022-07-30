@@ -60,7 +60,8 @@ class Orders
         $ids = $qb->setParameter('buyerId', $userId)
             ->setMaxResults(10)
             ->setFirstResult($offset)
-            ->orderBy('o.id', 'DESC')
+            //->orderBy('o.id', 'DESC')
+            ->orderBy('o.timestamp', 'DESC')
             ->getQuery()
             ->getArrayResult();
         $ids = array_column($ids, 'id');
