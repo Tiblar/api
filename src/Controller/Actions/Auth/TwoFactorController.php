@@ -158,7 +158,7 @@ class TwoFactorController extends ApiController
         ]);
 
         if(!$emailToken INSTANCEOF EmailToken || $emailToken->getExpireTimestamp() < new \DateTime()){
-            return $this->respondWithErrors([], "Invalid login code.", 400);
+            return $this->respondWithErrors([], "Invalid login code.", 410);
         }
 
         $user = $em->getRepository(User::class)->findOneBy([
@@ -166,7 +166,7 @@ class TwoFactorController extends ApiController
         ]);
 
         if(!$user INSTANCEOF User){
-            return $this->respondWithErrors([], "Invalid login code.", 400);
+            return $this->respondWithErrors([], "Invalid login code.", 404);
         }
 
         $refreshExpireTimestamp = new \DateTime();
