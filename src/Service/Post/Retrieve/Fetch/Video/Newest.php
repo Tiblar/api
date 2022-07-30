@@ -56,7 +56,8 @@ class Newest
         $qb->leftJoin('p.attachments', 'a');
         $qb->andWhere('(a.thumbnails IS NOT EMPTY)');
 
-        $qb->orderBy('p.id', 'DESC');
+        //$qb->orderBy('p.id', 'DESC');
+        $qb->orderBy('p.timestamp', 'DESC');
 
         $ids = $qb->getQuery()->getArrayResult();
 

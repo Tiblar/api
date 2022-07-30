@@ -47,7 +47,8 @@ class Newest
 
         $qb->andWhere('(p.reblog IS NULL)');
 
-        $qb->orderBy('p.id', 'DESC');
+        //$qb->orderBy('p.id', 'DESC');
+        $qb->orderBy('p.timestamp', 'DESC');
 
         $ids = $qb->getQuery()->getArrayResult();
 

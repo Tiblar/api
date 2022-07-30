@@ -272,7 +272,8 @@ class Notifier
             ->leftJoin('n.causers', 'c')
             ->setParameter('userId', $userId)
             ->setParameter('notificationId', $notificationId)
-            ->orderBy('n.id', 'DESC')
+            //->orderBy('n.id', 'DESC')
+            ->orderBy('n.timestamp', 'DESC')
             ->setMaxResults(40)
             ->getQuery()
             ->getArrayResult();

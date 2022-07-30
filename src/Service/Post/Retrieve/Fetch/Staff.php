@@ -55,7 +55,8 @@ class Staff
         $qb->andWhere('(p.reblog is null)');
         $qb->setParameter('afterId', $afterId);
 
-        $qb->orderBy('p.id', 'ASC');
+        //$qb->orderBy('p.id', 'ASC');
+        $qb->orderBy('p.timestamp', 'ASC');
 
         $ids = $qb->getQuery()->getArrayResult();
 
@@ -107,7 +108,8 @@ class Staff
         $qb->andWhere('(p.reblog is null)');
         $qb->setParameter('reports', $reportIds);
 
-        $qb->orderBy('p.id', 'ASC');
+        //$qb->orderBy('p.id', 'ASC');
+        $qb->orderBy('p.timestamp', 'ASC');
 
         $ids = $qb->getQuery()->getArrayResult();
 

@@ -68,7 +68,8 @@ class Categories
             $qb->setParameter('notInIds', $notInIds);
         }
 
-        $qb->orderBy('p.id', 'DESC');
+        //$qb->orderBy('p.id', 'DESC');
+        $qb->orderBy('p.timestamp', 'DESC');
 
         $qb->setParameter('category', $category);
 

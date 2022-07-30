@@ -159,7 +159,7 @@ class Emailer
     {
         $token = $this->em->getRepository(EmailToken::class)->findBy([
             'userId' => $userId,
-        ], ['id' => 'DESC'], 1);
+        ], ['timestamp' => 'DESC'], 1);
 
         $token = current($token);
 

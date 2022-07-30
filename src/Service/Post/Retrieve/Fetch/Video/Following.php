@@ -69,7 +69,8 @@ class Following
 
         $qb->setParameter('ids', $ids);
 
-        $qb->orderBy('p.id', 'DESC');
+        //$qb->orderBy('p.id', 'DESC');
+        $qb->orderBy('p.timestamp', 'DESC');
 
         $ids = $qb->getQuery()->getArrayResult();
 
