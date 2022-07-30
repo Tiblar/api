@@ -64,11 +64,11 @@ class Profile
         }
 
         $qb = $this->rqb->getQueryBuilder(false, $limit, $offset);
-
+        // post_user_id
         $qb->andWhere('(p.author = :profileId)');
 
         if(!is_null($query)){
-            $qb->andWhere('((p.title like :query) OR (p.body like :query) 
+            $qb->andWhere('((p.title like :query) OR (p.body like :query)
                         OR (:tag IN (SELECT t.title FROM App:Post\TagList t WHERE t.post = p.id)))');
             $qb->setParameter('query', '%' . $query . '%');
             $qb->setParameter('tag', $query);
@@ -81,7 +81,11 @@ class Profile
 
         $qb->setParameter('profileId', $userId);
 
-        $qb->orderBy('p.id', 'DESC');
+        // we're going to resort these anyways
+        // but we are applying a limit...
+        // and rqb requires a limit
+        //$qb->orderBy('p.id', 'DESC');
+        $qb->orderBy('p.timestamp', 'DESC');
 
         $ids = $qb->getQuery()->getArrayResult();
 
@@ -96,7 +100,14 @@ class Profile
         $posts = $this->formatter->posts($ids);
 
         usort($posts, function($a, $b) {
-            return $b->getId() - $a->getId();
+            $aid = $a->getId();
+            $bid = $b->getId();
+            if (strlen($aid) > strlen($bid)) return -1;  // aid is bigger
+            if (strlen($aid) < strlen($bid)) return 1; // bid is bigger
+            // same size, then numerically compare
+            // if b is bigger 1
+            // if a is bigger -1
+            return $bid - $aid;
         });
 
         $postIds = [];
@@ -133,6 +144,13 @@ class Profile
     public function videos($userId, $limit, $offset = 0, $query = null)
     {
         if(is_null($limit)){
+            $limit = 100;
+        }
+        if($limit > 100){
+            $limit = 100;
+        }
+
+        if($limit < 10){
             $limit = 10;
         }
 
@@ -147,13 +165,13 @@ class Profile
 
         $qb->andWhere('(p.author = :profileId)');
         $qb->andWhere('(p.reblog IS NULL)');
-        $qb->andWhere('(p.videoCategory IS NOT EMPTY)');
+        //$qb->andWhere('(p.videoCategory IS NOT EMPTY)');
         $qb->andWhere('(p.title IS NOT NULL)');
         $qb->leftJoin('p.attachments', 'a');
         $qb->andWhere('(a.thumbnails IS NOT EMPTY)');
 
         if(!is_null($query)){
-            $qb->andWhere('((p.title like :query) OR (p.body like :query) 
+            $qb->andWhere('((p.title like :query) OR (p.body like :query)
                         OR (:tag IN (SELECT t.title FROM App:Post\TagList t WHERE t.post = p.id)))');
             $qb->setParameter('query', '%' . $query . '%');
             $qb->setParameter('tag', $query);
@@ -161,7 +179,8 @@ class Profile
 
         $qb->setParameter('profileId', $userId);
 
-        $qb->orderBy('p.id', 'DESC');
+        //$qb->orderBy('p.id', 'DESC');
+        $qb->orderBy('p.timestamp', 'DESC');
 
         $ids = $qb->getQuery()->getArrayResult();
 
@@ -172,7 +191,14 @@ class Profile
         $posts = $this->formatter->posts($ids);
 
         usort($posts, function($a, $b) {
-            return $b->getId() - $a->getId();
+            $aid = $a->getId();
+            $bid = $b->getId();
+            if (strlen($aid) > strlen($bid)) return -1;  // aid is bigger
+            if (strlen($aid) < strlen($bid)) return 1; // bid is bigger
+            // same size, then numerically compare
+            // if b is bigger 1
+            // if a is bigger -1
+            return $bid - $aid;
         });
 
         return array_map(function ($post) {
@@ -199,7 +225,8 @@ class Profile
         $qb->andWhere('(p.id IN (:ids))');
         $qb->setParameter('ids', $ids);
 
-        $qb->orderBy('p.id', 'DESC');
+        //$qb->orderBy('p.id', 'DESC');
+        $qb->orderBy('p.timestamp', 'DESC');
 
         $ids = $qb->getQuery()->getArrayResult();
 
@@ -210,7 +237,14 @@ class Profile
         $posts = $this->formatter->posts($ids);
 
         usort($posts, function($a, $b) {
-            return $b->getId() - $a->getId();
+            $aid = $a->getId();
+            $bid = $b->getId();
+            if (strlen($aid) > strlen($bid)) return -1;  // aid is bigger
+            if (strlen($aid) < strlen($bid)) return 1; // bid is bigger
+            // same size, then numerically compare
+            // if b is bigger 1
+            // if a is bigger -1
+            return $bid - $aid;
         });
 
         return array_map(function ($post) {
@@ -242,7 +276,8 @@ class Profile
         $qb->andWhere('(a.thumbnails IS NOT EMPTY)');
         $qb->setParameter('ids', $ids);
 
-        $qb->orderBy('p.id', 'DESC');
+        //$qb->orderBy('p.id', 'DESC');
+        $qb->orderBy('p.timestamp', 'DESC');
 
         $ids = $qb->getQuery()->getArrayResult();
 
@@ -253,7 +288,14 @@ class Profile
         $posts = $this->formatter->posts($ids);
 
         usort($posts, function($a, $b) {
-            return $b->getId() - $a->getId();
+            $aid = $a->getId();
+            $bid = $b->getId();
+            if (strlen($aid) > strlen($bid)) return -1;  // aid is bigger
+            if (strlen($aid) < strlen($bid)) return 1; // bid is bigger
+            // same size, then numerically compare
+            // if b is bigger 1
+            // if a is bigger -1
+            return $bid - $aid;
         });
 
         return array_map(function ($post) {
