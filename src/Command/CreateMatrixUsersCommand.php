@@ -45,7 +45,7 @@ class CreateMatrixUsersCommand extends Command
         $connection->getConfiguration()->setSQLLogger(null);
 
         $this->matrixServer = $params->get("matrix")['server'];
-
+        //echo "matrix server [", $this->matrixServer, "]<br>\n";
         parent::__construct($name);
     }
 
@@ -63,6 +63,7 @@ class CreateMatrixUsersCommand extends Command
         $matrixUserIds = [];
         $page = 0;
 
+        // get a list of everyone we already have
         while(true){
             $data = $this->matrixInterface->listUserIds($page);
             $page++;
@@ -73,6 +74,7 @@ class CreateMatrixUsersCommand extends Command
                 break;
             }
         }
+        //print_r($matrixUserIds);
 
         $externalIds = "INSERT INTO user_external_ids values";
         $first = 0;
@@ -80,6 +82,7 @@ class CreateMatrixUsersCommand extends Command
         $mxcAvatars = [];
 
         while(true){
+            // find any one we don't have, batched at 100 at a time
             $list = $this->em->createQueryBuilder()
                 ->select('u', 'a')
                 ->from('App:User\UserInfo', 'u')
