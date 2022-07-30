@@ -34,7 +34,8 @@ class HistoryController extends ApiController
             ->setParameter('userId', $this->getUser()->getId())
             ->setFirstResult($offset)
             ->setMaxResults($limit)
-            ->orderBy('h.id', 'DESC')
+            //->orderBy('h.id', 'DESC')
+            ->orderBy('h.timestamp', 'DESC')
             ->getQuery()
             ->getArrayResult();
         $videoIds = array_column($historyIds, "postId");
