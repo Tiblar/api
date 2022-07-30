@@ -50,7 +50,8 @@ class Dashboard
 
         $qb->setParameter('following', $follow->getFollowing());
 
-        $qb->orderBy('p.id', 'DESC');
+        //$qb->orderBy('p.id', 'DESC');
+        $qb->orderBy('p.timestamp', 'DESC');
 
         $ids = $qb->getQuery()->getArrayResult();
 
