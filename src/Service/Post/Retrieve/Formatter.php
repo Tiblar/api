@@ -99,6 +99,7 @@ class Formatter {
 
             if(isset($post['attachments'])){
                 foreach($post['attachments'] as &$attachment){
+
                     $attachment['file']['url'] = '//' . $this->domain . '/' . $this->bucket . '/'.  $attachment['file']['hash'] . '.' . $attachment['file']['extension'];
 
                     if(isset($attachment['thumbnails']) && is_array($attachment['thumbnails'])){
@@ -108,10 +109,19 @@ class Formatter {
                     }
 
                     $ext = pathinfo($attachment['file']['url'], PATHINFO_EXTENSION);
-                    $file = $attachment['file']['hash'] . '.' . $ext;
-                    $tc = new Turntable();
-                    $result = $tc->transcode($file);
-                    $attachment['available_transcoding'] = json_decode($result, true);
+                    //print_r($post);
+                    //if (!empty($post['videoCategory']) && count($post['videoCategory'])) {
+                    //if (strtolower($ext) !== 'zip') {
+
+                    // as long as we have a hash, lets process it...
+                    if (!empty($attachment['file']['hash'])) {
+                      $file = $attachment['file']['hash'] . '.' . $ext;
+                      $tc = new Turntable();
+                      $result = $tc->transcode($file);
+                      $attachment['available_transcoding'] = json_decode($result, true);
+                    }
+                    //}
+                    //}
                 }
             }
 
