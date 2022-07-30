@@ -44,7 +44,8 @@ class GetPostController extends ApiController
             ->andWhere('h.postId = :postId')
             ->setParameter('timestamp', new \DateTime("-10 minutes"))
             ->setParameter('postId', $postId)
-            ->orderBy('h.id', 'DESC')
+            //->orderBy('h.id', 'DESC')
+            ->orderBy('h.timestamp', 'DESC')
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
@@ -53,9 +54,15 @@ class GetPostController extends ApiController
         if(
             !is_null($userId) &&
             !is_null($post[0]['title']) &&
-            !empty($post[0]['video_categories']) &&
+            //!empty($post[0]['video_categories']) &&
             count($post[0]['attachments']) > 0 &&
-            is_null($lastId)
+            is_null($lastId) &&
+            // is video
+            (
+              strpos($post[0]['attachments'][0]['file']['url'], 'mp4') !== false ||
+              strpos($post[0]['attachments'][0]['file']['url'], 'mov') !== false  ||
+              strpos($post[0]['attachments'][0]['file']['url'], 'webm') !== false
+            )
         ){
             $privacy = $em->getRepository(PrivacyEntity::class)->findOneBy([
                 'userId' => $userId,
@@ -69,7 +76,8 @@ class GetPostController extends ApiController
                     ->andWhere('h.postId != :postId')
                     ->setParameter('timestamp', new \DateTime("-60 minutes"))
                     ->setParameter('postId', $postId)
-                    ->orderBy('h.id', 'DESC')
+                    //->orderBy('h.id', 'DESC')
+                    ->orderBy('h.timestamp', 'DESC')
                     ->setMaxResults(1)
                     ->getQuery()
                     ->getOneOrNullResult();
@@ -84,13 +92,20 @@ class GetPostController extends ApiController
 
                 $em->persist($history);
                 $em->flush();
+                //$post[0]['attachments'][0]['added_to_history'] = true;
             }
         }
 
         if(
             !is_null($post[0]['title']) &&
-            !empty($post[0]['video_categories']) &&
-            count($post[0]['attachments']) > 0
+            //!empty($post[0]['video_categories']) &&
+            count($post[0]['attachments']) > 0 &&
+            // only encode video
+            (
+              strpos($post[0]['attachments'][0]['file']['url'], 'mp4') !== false ||
+              strpos($post[0]['attachments'][0]['file']['url'], 'mov') !== false  ||
+              strpos($post[0]['attachments'][0]['file']['url'], 'webm') !== false
+            )
         ){
           $ext = pathinfo($post[0]['attachments'][0]['file']['url'], PATHINFO_EXTENSION);
           $file = $post[0]['attachments'][0]['file']['hash'] . '.' . $ext;
