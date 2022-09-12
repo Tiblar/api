@@ -17,6 +17,7 @@ doctrine:
                 dql:
                     numeric_functions:
                         rand: App\DQL\Rand
+                        cast: App\DQL\Cast
                         floor: App\DQL\Floor
                         unix_timestamp: App\DQL\UnixTimestamp
                         from_unixtime: App\DQL\FromUnixtime
