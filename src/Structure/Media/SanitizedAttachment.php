@@ -50,7 +50,11 @@ class SanitizedAttachment
             $this->setThumbnails($arr['thumbnails']);
         }
 
-        if(isset($arr['available_transcoding'])){
+        // has to be type array
+        //$this->setAvailableTranscoding(array());
+        //  && !is_null($arr['available_transcoding'])
+
+        if(isset($arr['available_transcoding'])) {
             $this->setAvailableTranscoding($arr['available_transcoding']);
         }
     }
@@ -121,14 +125,12 @@ class SanitizedAttachment
 
 
     /**
-     * @return array
      */
-    public function getAvailableTranscoding(): array
+    public function getAvailableTranscoding()
     {
         return $this->available_transcoding;
     }
     /**
-     * @param array $row
      */
     public function setAvailableTranscoding(array $ats): void
     {
