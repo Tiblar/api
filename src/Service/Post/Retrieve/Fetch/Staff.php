@@ -51,14 +51,16 @@ class Staff
 
         $qb = $this->rqb->getQueryBuilder(false, $limit, 0, true);
 
-        $qb->andWhere('(p.id > :afterId)');
+        $qb->andWhere('(CAST(p.id) > :afterId)');
         $qb->andWhere('(p.reblog is null)');
         $qb->setParameter('afterId', $afterId);
 
-        //$qb->orderBy('p.id', 'ASC');
-        $qb->orderBy('p.timestamp', 'ASC');
+        $qb->orderBy('char_length(p.id)', 'ASC');
+        $qb->orderBy('p.id', 'ASC');
+        //$qb->orderBy('p.timestamp', 'ASC');
 
         $ids = $qb->getQuery()->getArrayResult();
+        //print_r($ids);
 
         if(!empty($ids)){
             $ids = array_column($ids, 'id');
@@ -108,8 +110,9 @@ class Staff
         $qb->andWhere('(p.reblog is null)');
         $qb->setParameter('reports', $reportIds);
 
-        //$qb->orderBy('p.id', 'ASC');
-        $qb->orderBy('p.timestamp', 'ASC');
+        $qb->orderBy('char_length(p.id)', 'ASC');
+        $qb->orderBy('p.id', 'ASC');
+        //$qb->orderBy('p.timestamp', 'ASC');
 
         $ids = $qb->getQuery()->getArrayResult();
 
